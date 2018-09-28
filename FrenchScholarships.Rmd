@@ -1,0 +1,86 @@
+---
+title: "Scholarships to Foreign Students by the French Government"
+author: "Karine G"
+date: "28 septembre 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Importing the data 
+
+The dataset is a csv file provided by the official French governmental platform for open data and features the number of scholarships to foreign students provided by the French government from 2006 through 2011. 
+
+We provide here a glimpse into a subset of the original dataset.
+
+```{r dataset}
+### Source: https://www.data.gouv.fr/fr/datasets/boursiers-du-gouvernement-francais/#_ 
+dataUrl <- 'http://www.data.gouv.fr/fr/datasets/r/dd3b4807-d90c-46fe-b03a-2ad250db979f'
+download.file(dataUrl, "myData.csv")
+globalData <- read.table("myData.csv", sep=";")
+print(globalData[1:11,1:4])
+```
+
+Installing libraries (esp. data.table, dplyr, ggplot2)
+
+```{r libraries, echo= TRUE, include = FALSE}
+library(R.utils)
+library(data.table)
+library(readr)
+library(ggplot2)
+library(dplyr)
+```
+
+## Tidying the data
+We subselect the rows and columns in order to have a dataset we can work on. To get useful numbers to do computations with, we must convert those in the dataset to numeric (and transit through the character format for that purpose, - while applying some regex through the "sub" function in order to remove blanks within large numbers).
+
+```{r tidying_dataframe, echo=TRUE}
+tidyData <- globalData[4:15,2:7] %>% 
+        apply(2, as.character) %>% 
+        sub(" ", "", .) %>% 
+        apply(2, as.numeric) %>%
+        as.data.frame(.)
+```
+
+Then, we must get to a more classic presentation, with rows indicating years. Hence, a transposing of the matrix through the 't' function. In order to use ggplot2 conveniently, years are added as a column in itself. Normalized labels are used for the regions instead of the full names.
+
+```{r final_tidying, echo=TRUE}
+
+Years <- as.factor(as.character(c(2006:2011)))
+finalTidy <- as.data.frame(t(tidyData)) %>% 
+        cbind(Years, .)
+Regions <- c("Years", "EU", "EurNotEU", "Total_Eur", "Am_N", "Total_Am", "Total_Asia_O", "Middle_E", "AfSubS_F", "AfSubS_nF","Total_AfSubS", "Maghreb", "Total_Ge")
+colnames(finalTidy) <- Regions
+rownames(finalTidy) <- Years
+print(finalTidy)
+```
+
+### Data vizualization
+
+```{r vizualization, echo= TRUE}
+
+myPlot <- ggplot(finalTidy, aes(x=Years, y=Middle_E, group = "Middle_E")) + geom_point(color="red") + 
+        geom_line(color="red") +
+        geom_point(mapping = aes(x=Years, y=EU, group = "EU"), color="blue") + 
+        geom_line(mapping = aes(x=Years, y=EU, group = "EU"), color="blue") +
+        geom_point(mapping = aes(x=Years, y=Maghreb, group = "Maghreb", color="Maghreb"), color="green") + 
+        geom_line(mapping = aes(x=Years, y=Maghreb, group = "Maghreb"), color="green") +
+        geom_point(mapping = aes(x=Years, y=Total_Am, group = "Total_Am"), color="black") + 
+        geom_line(mapping = aes(x=Years, y=Total_Am, group = "Total_Am"), color="black")+
+        geom_point(mapping = aes(x=Years, y=EurNotEU, group = "EurNotEU"), color="yellow") + 
+        geom_line(mapping = aes(x=Years, y=EurNotEU, group = "EurNotEU"), color="yellow") +
+        geom_point(mapping = aes(x=Years, y=Total_AfSubS, group = "Total_AfSubS"), color="orange") + 
+        geom_line(mapping = aes(x=Years, y=Total_AfSubS, group = "Total_AfSubS"), color="orange") +
+        geom_point(mapping = aes(x=Years, y=Total_Asia_O, group = "Total_Asia_O"), color="grey") + 
+        geom_line(mapping = aes(x=Years, y=Total_Asia_O, group = "Total_Asia_O"), color="grey") +
+        ylab("Number of scholarships")+
+        labs(caption="LEGEND: Blue: European Union / Yellow: Europe outside the EU / Orange: Subsaharian Africa / 
+             Green:Maghreb / Grey: Asia and Oceania / Black: Americas")+
+        ggtitle("Inviting students to France", subtitle="Scholarships given by the French government to foreign students 2006-2011") 
+
+print(myPlot)
+
+```
+
