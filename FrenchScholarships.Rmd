@@ -1,5 +1,5 @@
 ---
-title: "Scholarships to Foreign Students by the French Government"
+title: "French Government Scholarships to Foreign Students"
 author: "Karine G"
 date: "28 septembre 2018"
 output: html_document
@@ -15,12 +15,14 @@ French government scholarships are allocated by the Ministry for Europe and Fore
 
 https://www.diplomatie.gouv.fr/en/coming-to-france/studying-in-france/finance-your-studies-scholarships/
 
-We have here a look at how they are allocated by world region 2006-2011.
+We have here a look at their geographical repartition by world region 2006-2011 thanks to open data published by the French authorities.
 
-## Scholarships by the French government to foreign students
+## French government scholarships to foreign students
 
 
 The dataset is a csv file provided by the official French governmental platform for open data and features the number of scholarships to foreign students provided by the French government from 2006 through 2011. 
+
+https://www.data.gouv.fr/fr/datasets/boursiers-du-gouvernement-francais/#_
 
 ### Importing the data 
 
@@ -34,7 +36,7 @@ globalData <- read.table("myData.csv", sep=";")
 print(globalData[1:11,1:4])
 ```
 
-Installing libraries: R.utils, data.table, tidyr, dplyr, readr, ggplot2, sf, RColorBrewer
+Opening libraries: R.utils, data.table, tidyr, dplyr, readr, ggplot2, sf, RColorBrewer. 
 
 ```{r libraries, echo= TRUE, include = FALSE}
 library(R.utils)
@@ -75,27 +77,30 @@ print(finalTidy)
 
 ```{r vizualization, echo= TRUE}
 
-myPlot <- ggplot(finalTidy, aes(x=Years, y=Middle_E, group = "Middle_E")) + geom_point(color="red") + 
-        geom_line(color="red") +
-        geom_point(mapping = aes(x=Years, y=EU, group = "EU"), color="blue") + 
-        geom_line(mapping = aes(x=Years, y=EU, group = "EU"), color="blue") +
-        geom_point(mapping = aes(x=Years, y=Maghreb, group = "Maghreb", color="Maghreb"), color="green") + 
-        geom_line(mapping = aes(x=Years, y=Maghreb, group = "Maghreb"), color="green") +
-        geom_point(mapping = aes(x=Years, y=Total_Am, group = "Total_Am"), color="black") + 
-        geom_line(mapping = aes(x=Years, y=Total_Am, group = "Total_Am"), color="black")+
-        geom_point(mapping = aes(x=Years, y=EurNotEU, group = "EurNotEU"), color="yellow") + 
-        geom_line(mapping = aes(x=Years, y=EurNotEU, group = "EurNotEU"), color="yellow") +
-        geom_point(mapping = aes(x=Years, y=Total_AfSubS, group = "Total_AfSubS"), color="orange") + 
-        geom_line(mapping = aes(x=Years, y=Total_AfSubS, group = "Total_AfSubS"), color="orange") +
-        geom_point(mapping = aes(x=Years, y=Total_Asia_O, group = "Total_Asia_O"), color="grey") + 
-        geom_line(mapping = aes(x=Years, y=Total_Asia_O, group = "Total_Asia_O"), color="grey") +
-        ylab("Number of scholarships")+
-        labs(caption="LEGEND: Blue: European Union / Yellow: Europe outside the EU / Orange: Subsaharian Africa / 
-             Green:Maghreb / Grey: Asia and Oceania / Black: Americas")+
-        ggtitle("Inviting students to France", subtitle="Scholarships given by the French government to foreign students 2006-2011") 
+data_Eur <- cbind(finalTidy[,c(1,4)], Region=rep("Europe", 6))
+data_Am <- cbind(finalTidy[,c(1,6)], Region=rep("America", 6))
+data_Asia <- cbind(finalTidy[,c(1,7)], Region=rep("Asia/OCeania", 6))
+data_ME <- cbind(finalTidy[,c(1,8)], Region=rep("Middle East", 6))
+data_Afr <- cbind(finalTidy[,c(1,11)], Region=rep("Sub-Saharan Africa", 6))
+data_Magh <- cbind(finalTidy[,c(1,12)], Region=rep("Maghreb", 6))
 
-print(myPlot)
 
+names(data_Eur)<- c("Years", "Total", "Region")
+names(data_Am)<- c("Years", "Total", "Region")
+names(data_Asia)<- c("Years", "Total", "Region")
+names(data_ME)<- c("Years", "Total", "Region")
+names(data_Afr)<- c("Years", "Total", "Region")
+names(data_Magh)<- c("Years", "Total", "Region")
+
+long_Data <- rbind(data_Afr, data_Am, data_Asia, data_Eur, data_Magh, data_ME)
+
+#### DATA VIZ ####
+
+ScholPlot <- ggplot(data=long_Data) + geom_point(aes(x=Years, y=Total, color = Region, size= 10)) +
+        geom_line(aes(x=Years, y=Total, group = Region)) + guides(size=FALSE)
+print(ScholPlot)
+
+ggsave('ScholPlot.png', width = 16, height = 9, dpi = 100)
 ```
 
 
