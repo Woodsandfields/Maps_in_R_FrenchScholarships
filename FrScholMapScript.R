@@ -10,34 +10,37 @@ library(RColorBrewer)
 
 region_location <- "C:/Users/Kroutz-/Dropbox/MOOCS/DATA/DATA_Knight/WORLD_SIMPL/TM_WORLD_BORDERS_SIMPL-0.3.shp"
 
-
 theRegions <- st_read(region_location)
 
-theRegions$REGION <- as.factor(theRegions$REGION)
-theRegions$SUBREGION <- as.factor(theRegions$SUBREGION)
+# theRegions$REGION <- as.factor(theRegions$REGION)
+# theRegions$SUBREGION <- as.factor(theRegions$SUBREGION)
 
 # number of subregions -> nb of colors necessary
 # NbSubregions <- length(levels(theRegions$SUBREGION))
-# NbRegions  <- length(levels(theRegions$SUBREGION))
 
 
 ## Getting an overview of the subregions to adapt them to our own dataset
 ## This gives a 3-column dataframe (as a subset from the original shp(sf)-dataframe, automatically includes geometry)
 
-myRegions <- theRegions[, c("NAME", "SUBREGION")]
-myRegions$NAME <- as.character(myRegions$NAME)
+myRegions <- tbl_df(theRegions) %>%
+        select(NAME, SUBREGION, geometry) %>%
+        mutate(SUBREGION=as.factor(SUBREGION), NAME=as.character(NAME)) 
+
 
 
 ## Transforming data: ordering subregions by level to check and reassign countries to "our" subregions as second step
 OrderedList <- myRegions[order(myRegions$SUBREGION),]
 #creates a vector of integers with names for each value, thus adding for each subregion number (here "names") the # of occurences.
-levelSumm <- summary(myRegions$SUBREGION)
+
+#levelSumm <- summary(myRegions$SUBREGION)
+
 # MO:145 (+ Iran), EUR:39,151,154,155, Maghreb:15+Egypt+Sudan, 
 # AfSubS: 11, 14, 17, 18
 # Asia_0: 30,34, 35, 53, 54, 57, 61, 143
 
 #add a column
-myRegions$Regions <- as.character(myRegions$SUBREGION)
+
+myRegions <- mutate(myRegions, Regions=" ")
 myRegions$Regions[myRegions$Regions =="0"] <- "Antarctica"
 
 myRegions$Regions[myRegions$SUBREGION %in% c(39, 151, 154, 155)] <- "Europe"
