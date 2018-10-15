@@ -104,11 +104,11 @@ myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
              subtitle="Scholarships to Foreign Students by the French Government")+
         geom_label(aes(x=LON, y=LAT), 
                    color="black", fill = "grey", 
-                   label=myRegions$Regions, size=2)+
+                   label=toupper(myRegions$Regions), size=2)+
         xlab("") + ylab("") +
         guides(color = FALSE)
 
-# print(myMap)
+ print(myMap)
 
 # Here is another, more satisfying map.
 
