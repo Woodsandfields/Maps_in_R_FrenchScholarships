@@ -179,7 +179,7 @@ myRegions$schol[myRegions$schol == "Antarctica"]<- 0
 
 Now, let's do a map.
 
-```{r drawing a map, echo = TRUE}
+```{r drawing a map, out.width="120%", echo = TRUE}
 
 
 # Substituting the regional mean for LON and LAT,
@@ -210,12 +210,12 @@ myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
         labs(caption="Number of Scholarships Given by World Region in 2016", 
              subtitle="Scholarships to Foreign Students by the French Government")+
         geom_label(aes(x=LON, y=LAT), 
-                   color="black", fill = "grey", 
+                   color="black", fill = "transparent", 
                    label=myRegions$Regions, size=2)+
         xlab("") + ylab("") +
         guides(color = FALSE)
 
-# print(myMap)
+print(myMap)
 
 # Here is another, more satisfying map.
 
@@ -224,8 +224,8 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         labs(caption="Number of Scholarships Given by World Region in 2016", 
              title="World Repartition of French Government Scholarships")+
         geom_label(aes(x=LON, y=LAT), 
-                   color="black", fill = "grey", 
-                   label=myRegions$schol, size=2.2)+
+                   color="black", fill = "seashell", 
+                   label=myRegions$schol, size=1.8)+
         xlab("") + ylab("")
 
 print(myMap2)

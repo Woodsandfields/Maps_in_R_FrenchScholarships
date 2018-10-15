@@ -221,8 +221,12 @@ myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
         xlab("") + ylab("") +
         guides(color = FALSE)
 
-# print(myMap)
+print(myMap)
+```
 
+<img src="FrenchScholarships_files/figure-markdown_github-ascii_identifiers/drawing a map-1.png" width="120%" />
+
+``` r
 # Here is another, more satisfying map.
 
 myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
@@ -230,11 +234,11 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         labs(caption="Number of Scholarships Given by World Region in 2016", 
              title="World Repartition of French Government Scholarships")+
         geom_label(aes(x=LON, y=LAT), 
-                   color="black", fill = "grey", 
-                   label=myRegions$schol, size=2.2)+
+                   color="black", fill = "seashell", 
+                   label=myRegions$schol, size=1.8)+
         xlab("") + ylab("")
 
 print(myMap2)
 ```
 
-![](FrenchScholarships_files/figure-markdown_github-ascii_identifiers/drawing%20a%20map-1.png)
+<img src="FrenchScholarships_files/figure-markdown_github-ascii_identifiers/drawing a map-2.png" width="120%" />
