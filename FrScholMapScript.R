@@ -108,7 +108,8 @@ myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
         xlab("") + ylab("") +
         guides(color = FALSE)
 
- print(myMap)
+ 
+print(myMap)
 
 # Here is another, more satisfying map.
 

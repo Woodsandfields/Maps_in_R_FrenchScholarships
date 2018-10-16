@@ -146,8 +146,6 @@ myRegions <- tbl_df(theRegions) %>%
         mutate(SUBREGION=as.factor(SUBREGION), NAME=as.character(NAME))
 ```
 
-    ## Warning: package 'bindrcpp' was built under R version 3.4.4
-
 We must merge our own geographic repartition with the one from the shapefile. The shapefile indeed lists the world countries and groups them by regions and subregions (additional columns), but those don't match the world regions from our initial dataset. Some investigation into the data is here necessary.
 
 So we create here a ne data frame "OrderedList" to order subregions by number and thus check the list (not published here, see the created data frame "OrderedList" if you want to reproduce step by step). This makes it easily then to peruse the document and find the logic behind the numbers, - and thus reassign countries by subregion number to "our" subregions from the original list we have for scholarships as a next step.
@@ -182,7 +180,7 @@ myRegions$schol[myRegions$schol == "Maghreb"]<- 2897
 myRegions$schol[myRegions$schol == "Sub-Saharan Africa"]<- 2906
 myRegions$schol[myRegions$schol == "Asia & Oceania"]<- 2662
 myRegions$schol[myRegions$schol == "America"]<- 1770
-myRegions$schol[myRegions$schol == "Antarctica"]<- 0
+myRegions$schol[myRegions$schol == "Antarctica"]<- NA
 ```
 
 Now, let's do a map.
@@ -198,17 +196,15 @@ myRegions <- myRegions %>%
         mutate(LON = mean(LON), LAT = mean(LAT),
                LON = case_when(Regions == "Asia & Oceania" ~ LON+50, TRUE  ~ LON),
                LAT = case_when(Regions == "Antarctica" ~ LAT-50, TRUE ~ LAT))
+```
 
+Let's make a choropleth map with this.
 
-# Here is the choropeth map as expected in the final document to produce for the Knight Foundation.
-# However, it doesn't look good and add less than the format we will try as a next step.
-# So we'll try something else for the final presentation and produce two maps instead of one.
-
+``` r
 myRegions$schol <- as.numeric(myRegions$schol)
 
 myColors <- brewer.pal(12,"Set3") 
 names(myColors) <- levels(as.factor(myRegions$Regions))
-#colScale <- scale_color_manual(name = "SUBREGION",values = myColors)
 
 myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
         scale_fill_distiller(direction = 1, 
@@ -226,9 +222,9 @@ print(myMap)
 
 <img src="FrenchScholarships_files/figure-markdown_github-ascii_identifiers/drawing a map-1.png" width="120%" />
 
-``` r
-# Here is another, more satisfying map.
+This choropleth map doesn't inform clearly enough. So let's try something else.
 
+``` r
 myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         scale_fill_brewer(palette="Set1")+
         labs(caption="Number of Scholarships Given by World Region in 2016", 
@@ -241,4 +237,4 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
 print(myMap2)
 ```
 
-<img src="FrenchScholarships_files/figure-markdown_github-ascii_identifiers/drawing a map-2.png" width="120%" />
+<img src="FrenchScholarships_files/figure-markdown_github-ascii_identifiers/second map-1.png" width="120%" />

@@ -6,7 +6,7 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
 ```
 
 ## Introduction
@@ -173,13 +173,13 @@ myRegions$schol[myRegions$schol == "Maghreb"]<- 2897
 myRegions$schol[myRegions$schol == "Sub-Saharan Africa"]<- 2906
 myRegions$schol[myRegions$schol == "Asia & Oceania"]<- 2662
 myRegions$schol[myRegions$schol == "America"]<- 1770
-myRegions$schol[myRegions$schol == "Antarctica"]<- 0
+myRegions$schol[myRegions$schol == "Antarctica"]<- NA
 
 ```
 
 Now, let's do a map.
 
-```{r drawing a map, out.width="120%", echo = TRUE}
+```{r LON and LAT for map, out.width="120%", echo = TRUE}
 
 
 # Substituting the regional mean for LON and LAT,
@@ -193,16 +193,16 @@ myRegions <- myRegions %>%
                LON = case_when(Regions == "Asia & Oceania" ~ LON+50, TRUE  ~ LON),
                LAT = case_when(Regions == "Antarctica" ~ LAT-50, TRUE ~ LAT))
 
+```
 
-# Here is the choropeth map as expected in the final document to produce for the Knight Foundation.
-# However, it doesn't look good and add less than the format we will try as a next step.
-# So we'll try something else for the final presentation and produce two maps instead of one.
+Let's make a choropleth map with this.
+
+```{r drawing a map, out.width="120%", echo = TRUE}
 
 myRegions$schol <- as.numeric(myRegions$schol)
 
 myColors <- brewer.pal(12,"Set3") 
 names(myColors) <- levels(as.factor(myRegions$Regions))
-#colScale <- scale_color_manual(name = "SUBREGION",values = myColors)
 
 myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
         scale_fill_distiller(direction = 1, 
@@ -216,8 +216,12 @@ myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
         guides(color = FALSE)
 
 print(myMap)
+````
 
-# Here is another, more satisfying map.
+This choropleth map doesn't inform clearly enough.
+So let's try something else.
+
+```{r second map, out.width="120%", echo = TRUE}
 
 myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         scale_fill_brewer(palette="Set1")+
@@ -229,7 +233,5 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         xlab("") + ylab("")
 
 print(myMap2)
-
-
 
 ````
