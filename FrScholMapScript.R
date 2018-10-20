@@ -41,28 +41,18 @@ OrderedList <- myRegions[order(myRegions$SUBREGION),]
 
 
 myRegions <- myRegions %>%
-        mutate(Regions = case_when
-               (SUBREGION == 0 ~ "Antarctica", 
-                SUBREGION %in% c(39,151, 154, 155) ~ "Europe",
-                (SUBREGION  == 15 & NAME != "Egypt" & NAME !="Sudan") ~ "Maghreb",
-                SUBREGION %in% c(30, 34, 35, 53, 54, 57, 61, 143) ~ "Asia & Oceania",
-                SUBREGION %in% c(5, 13, 21, 29) ~ "America",
+        mutate(Regions_schol = case_when
+               (SUBREGION == 0 ~ "Antarctica_NA", 
+                SUBREGION %in% c(39,151, 154, 155) ~ "Europe_2755",
+                (SUBREGION  == 15 & NAME != "Egypt" & NAME !="Sudan") ~ "Maghreb_2997",
+                SUBREGION %in% c(30, 34, 35, 53, 54, 57, 61, 143) ~ "AsiaOceania_2662",
+                SUBREGION %in% c(5, 13, 21, 29) ~ "America_1770",
                 (SUBREGION == 145 | NAME=="Iran (Islamic Republic of)"
-                 | NAME == "Egypt") ~ "Middle East", 
-                SUBREGION %in% c(11, 14, 17, 18) ~ "Sub-Saharan Africa",
-                       NAME == "Sudan" ~ "Sub-Saharan Africa"
-                       ))
-
-myRegions <- myRegions %>%
-        mutate(schol = Regions)
-
-myRegions$schol[myRegions$schol == "Europe"]<- 2755
-myRegions$schol[myRegions$schol == "Middle East"]<- 1697
-myRegions$schol[myRegions$schol == "Maghreb"]<- 2897
-myRegions$schol[myRegions$schol == "Sub-Saharan Africa"]<- 2906
-myRegions$schol[myRegions$schol == "Asia & Oceania"]<- 2662
-myRegions$schol[myRegions$schol == "America"]<- 1770
-myRegions$schol[myRegions$schol == "Antarctica"]<- NA
+                 | NAME == "Egypt")  ~ "MiddleEast_1697", 
+                SUBREGION %in% c(11, 14, 17, 18) | NAME == "Sudan" ~ "SubSaharanAfrica_2906"
+                 )) %>%
+                separate(Regions_schol, c("Regions", "schol")) 
+                                         
 
 myRegions$schol <- as.numeric(myRegions$schol)
 
@@ -74,7 +64,7 @@ myRegions_notRegrouped <- myRegions
 myRegions <- myRegions %>%
         group_by(Regions) %>%
         mutate(LON = mean(LON), LAT = mean(LAT),
-               LON = case_when(Regions == "Asia & Oceania" ~ LON+50, TRUE  ~ LON),
+               LON = case_when(Regions == "AsiaOceania" ~ LON+50, TRUE  ~ LON),
                LAT = case_when(Regions == "Antarctica" ~ LAT-50, TRUE ~ LAT))
 
 
@@ -105,7 +95,7 @@ myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
              subtitle="Scholarships to Foreign Students by the French Government")+
         geom_label(aes(x=LON, y=LAT), 
                    color="black", fill = "grey", 
-                   label=toupper(myRegions$Regions), size=2)+
+                   label=myRegions$Regions, size=2)+
         xlab("") + ylab("") +
         guides(color = FALSE)
 
@@ -123,8 +113,8 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
                    label=myRegions$schol, size=2.2)+
         xlab("") + ylab("")
 
-print(myMap2)
+#print(myMap2)
 # 
-# ggsave('myMap2.png', myMap2, width = 16, height = 9, dpi = 100)
-# ggsave('myMap1.png', myMap, width = 16, height = 9, dpi = 100)
+ggsave('myMap2.png', myMap2, width = 16, height = 9, dpi = 100)
+ggsave('myMap1.png', myMap, width = 16, height = 9, dpi = 100)
 # 

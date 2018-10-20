@@ -160,27 +160,17 @@ Middle East: 145 (+ Iran) EUR: 39,151,154,155 Maghreb: 15+Egypt+Sudan AfSubS: 11
 
 ``` r
 myRegions <- myRegions %>%
-        mutate(Regions = case_when
-               (SUBREGION == 0 ~ "Antarctica", 
-                SUBREGION %in% c(39,151, 154, 155) ~ "Europe",
-                (SUBREGION  == 15 & NAME != "Egypt" & NAME !="Sudan") ~ "Maghreb",
-                SUBREGION %in% c(30, 34, 35, 53, 54, 57, 61, 143) ~ "Asia & Oceania",
-                SUBREGION %in% c(5, 13, 21, 29) ~ "America",
+        mutate(Regions_schol = case_when
+               (SUBREGION == 0 ~ "Antarctica_NA", 
+                SUBREGION %in% c(39,151, 154, 155) ~ "Europe_2755",
+                (SUBREGION  == 15 & NAME != "Egypt" & NAME !="Sudan") ~ "Maghreb_2997",
+                SUBREGION %in% c(30, 34, 35, 53, 54, 57, 61, 143) ~ "AsiaOceania_2662",
+                SUBREGION %in% c(5, 13, 21, 29) ~ "America_1770",
                 (SUBREGION == 145 | NAME=="Iran (Islamic Republic of)"
-                 | NAME == "Egypt") ~ "Middle East", 
-                SUBREGION %in% c(11, 14, 17, 18) ~ "Sub-Saharan Africa",
-                       NAME == "Sudan" ~ "Sub-Saharan Africa"
-                       ))
-
-#Now we add the 2011 figures for those regions as those are the ones we want to map.
-myRegions$schol <- myRegions$Regions
-myRegions$schol[myRegions$schol == "Europe"]<- 2755
-myRegions$schol[myRegions$schol == "Middle East"]<- 1697
-myRegions$schol[myRegions$schol == "Maghreb"]<- 2897
-myRegions$schol[myRegions$schol == "Sub-Saharan Africa"]<- 2906
-myRegions$schol[myRegions$schol == "Asia & Oceania"]<- 2662
-myRegions$schol[myRegions$schol == "America"]<- 1770
-myRegions$schol[myRegions$schol == "Antarctica"]<- NA
+                 | NAME == "Egypt")  ~ "MiddleEast_1697", 
+                SUBREGION %in% c(11, 14, 17, 18) | NAME == "Sudan" ~ "SubSaharanAfrica_2906"
+                 )) %>%
+                separate(Regions_schol, c("Regions", "schol")) 
 ```
 
 Now, let's do a map.
@@ -194,7 +184,7 @@ myRegions_notRegrouped <- myRegions
 myRegions <- myRegions %>%
         group_by(Regions) %>%
         mutate(LON = mean(LON), LAT = mean(LAT),
-               LON = case_when(Regions == "Asia & Oceania" ~ LON+50, TRUE  ~ LON),
+               LON = case_when(Regions == "AsiaOceania" ~ LON+50, TRUE  ~ LON),
                LAT = case_when(Regions == "Antarctica" ~ LAT-50, TRUE ~ LAT))
 ```
 
