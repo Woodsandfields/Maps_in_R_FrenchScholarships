@@ -27,7 +27,6 @@ myRegions <- tbl_df(theRegions) %>%
         mutate(SUBREGION=as.factor(SUBREGION), NAME=as.character(NAME))
 
 
-
 ## Transforming data: ordering subregions by level to check and reassign countries to "our" subregions as second step
 OrderedList <- myRegions[order(myRegions$SUBREGION),]
 #creates a vector of integers with names for each value, thus adding for each subregion number (here "names") the # of occurences.
@@ -40,21 +39,23 @@ OrderedList <- myRegions[order(myRegions$SUBREGION),]
 
 #add a column
 
-myRegions <- mutate(myRegions, Regions=" ")
-myRegions$Regions[myRegions$SUBREGION =="0"] <- "Antarctica"
 
-myRegions$Regions[myRegions$SUBREGION %in% c(39, 151, 154, 155)] <- "Europe"
-myRegions$Regions[myRegions$SUBREGION %in% c(11, 14, 17, 18)] <- "Sub-Saharan Africa"
-myRegions$Regions[myRegions$SUBREGION %in% c(30, 34, 35, 53, 54, 57, 61, 143)] <- "Asia & Oceania"
-myRegions$Regions[myRegions$SUBREGION %in% c(5, 13, 21, 29)] <- "America"
-myRegions$Regions[myRegions$SUBREGION == 145] <- "Middle East"
-myRegions$Regions[myRegions$SUBREGION == 15] <- "Maghreb"
+myRegions <- myRegions %>%
+        mutate(Regions = case_when
+               (SUBREGION == 0 ~ "Antarctica", 
+                SUBREGION %in% c(39,151, 154, 155) ~ "Europe",
+                (SUBREGION  == 15 & NAME != "Egypt" & NAME !="Sudan") ~ "Maghreb",
+                SUBREGION %in% c(30, 34, 35, 53, 54, 57, 61, 143) ~ "Asia & Oceania",
+                SUBREGION %in% c(5, 13, 21, 29) ~ "America",
+                (SUBREGION == 145 | NAME=="Iran (Islamic Republic of)"
+                 | NAME == "Egypt") ~ "Middle East", 
+                SUBREGION %in% c(11, 14, 17, 18) ~ "Sub-Saharan Africa",
+                       NAME == "Sudan" ~ "Sub-Saharan Africa"
+                       ))
 
-myRegions$Regions[myRegions$NAME=="Iran (Islamic Republic of)"]<- "Middle East"
-myRegions$Regions[myRegions$NAME=="Sudan"]<- "Sub-Saharan Africa"
-myRegions$Regions[myRegions$NAME=="Egypt"]<- "Middle East"
+myRegions <- myRegions %>%
+        mutate(schol = Regions)
 
-myRegions$schol <- myRegions$Regions
 myRegions$schol[myRegions$schol == "Europe"]<- 2755
 myRegions$schol[myRegions$schol == "Middle East"]<- 1697
 myRegions$schol[myRegions$schol == "Maghreb"]<- 2897
@@ -123,7 +124,7 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         xlab("") + ylab("")
 
 print(myMap2)
-
-ggsave('myMap2.png', myMap2, width = 16, height = 9, dpi = 100)
-ggsave('myMap1.png', myMap, width = 16, height = 9, dpi = 100)
-
+# 
+# ggsave('myMap2.png', myMap2, width = 16, height = 9, dpi = 100)
+# ggsave('myMap1.png', myMap, width = 16, height = 9, dpi = 100)
+# 
