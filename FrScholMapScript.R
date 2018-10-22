@@ -91,7 +91,7 @@ names(myColors) <- levels(as.factor(myRegions$Regions))
 myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
         scale_fill_distiller(direction = 1, 
                              name =" Number of Scholarships", palette="Oranges")+
-        labs(caption="Number of Scholarships Given by World Region in 2016", 
+        labs(caption="Number of Scholarships Given by World Region in 2011", 
              subtitle="Scholarships to Foreign Students by the French Government")+
         geom_label(aes(x=LON, y=LAT), 
                    color="black", fill = "grey", 
@@ -106,7 +106,7 @@ print(myMap)
 
 myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         scale_fill_brewer(palette="Set1")+
-        labs(caption="Number of Scholarships Given by World Region in 2016", 
+        labs(caption="Number of Scholarships Given by World Region in 2011", 
              title="World Repartition of French Government Scholarships")+
         geom_label(aes(x=LON, y=LAT), 
                    color="black", fill = "grey", 
