@@ -1,12 +1,22 @@
-## Map for FrenchScholarships 
+# Map for FrenchScholarships practice case (Knight Foundation)
+#*************************************************************
+# **** *******************************************************
+
+
+
+# LOADING PACKAGES. Checking first they are already available else downloading them.
+
+packages <- c("R.utils", "data.table", "ggplot2", "sf", "readr", "dplyr", "tidyr", "RColorBrewer")
+
+for (package in packages) {
+        if (!require(package, character.only=T, quietly=T)) {
+                install.packages(package)}
+        library(package, character.only=T)
+        }
+
+
 
 ## MapSource http://thematicmapping.org/downloads/TM_WORLD_BORDERS_SIMPL-0.3.zip 
-library(ggplot2)
-library(sf)
-library(readr)
-library(dplyr)
-library(tidyr)
-library(RColorBrewer)
 
 
 #In order to work of the file and save time not downloading the shapefile every time, 
@@ -121,6 +131,6 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
 
 print(myMap2)
 # 
-# ggsave('myMap2.png', myMap2, width = 16, height = 9, dpi = 100)
-# ggsave('myMap1.png', myMap, width = 16, height = 9, dpi = 100)
+ggsave('myMap2.png', myMap2, width = 16, height = 9, dpi = 100)
+ggsave('myMap1.png', myMap, width = 16, height = 9, dpi = 100)
 # 

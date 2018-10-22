@@ -36,17 +36,22 @@ globalData <- read.table("myData.csv", sep=";")
 print(globalData[1:11,1:4])
 ```
 
-Opening libraries: R.utils, data.table, tidyr, dplyr, readr, ggplot2, sf, RColorBrewer. 
 
-```{r libraries, echo= TRUE, include = FALSE}
-library(R.utils)
-library(data.table)
-library(readr)
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(sf)
-library(RColorBrewer)
+### Loading packages. 
+
+Checking first the packages we will use are already available else downloading them. Opening: R.utils, data.table, tidyr, dplyr, readr, ggplot2, sf, RColorBrewer. 
+
+```{r libraries, echo= TRUE, message = FALSE}
+
+
+packages <- c("R.utils", "data.table", "ggplot2", "sf", "readr", "dplyr", "tidyr", "RColorBrewer")
+
+for (package in packages) {
+        if (!require(package, character.only=T, quietly=T)) {
+                install.packages(package)}
+        library(package, character.only=T)
+        }
+
 ```
 
 ## Tidying the data

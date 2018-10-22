@@ -1,8 +1,13 @@
-library(R.utils)
-library(data.table)
-library(readr)
-library(ggplot2)
-library(dplyr)
+
+
+packages <- c("R.utils", "data.table", "readr", "ggplot2", "dplyr")
+
+for (package in packages) {
+        if (!require(package, character.only=T, quietly=T)) {
+                install.packages(package)}
+        library(package, character.only=T)
+}
+
 
 
 
@@ -10,9 +15,13 @@ library(dplyr)
 
 #### DATA DWNLD #### 
 
+# You might want to uncomment the next two lines in order to avoid downloading again and again.
+
 dataUrl <- 'http://www.data.gouv.fr/fr/datasets/r/dd3b4807-d90c-46fe-b03a-2ad250db979f'
 download.file(dataUrl, "myData.csv")
+
 globalData <- read.table("myData.csv", sep=";")
+
 
 #### DATA TIDYING ####
 

@@ -44,7 +44,19 @@ print(globalData[1:11,1:4])
     ## 10                                        MOYEN-ORIENT 2 435 2 326 2 067
     ## 11                  Afrique Sub saharienne francophone 3 337 3 283 2 950
 
-Opening libraries: R.utils, data.table, tidyr, dplyr, readr, ggplot2, sf, RColorBrewer.
+### Loading packages.
+
+Checking first the packages we will use are already available else downloading them. Opening: R.utils, data.table, tidyr, dplyr, readr, ggplot2, sf, RColorBrewer.
+
+``` r
+packages <- c("R.utils", "data.table", "ggplot2", "sf", "readr", "dplyr", "tidyr", "RColorBrewer")
+
+for (package in packages) {
+        if (!require(package, character.only=T, quietly=T)) {
+                install.packages(package)}
+        library(package, character.only=T)
+        }
+```
 
 Tidying the data
 ----------------
