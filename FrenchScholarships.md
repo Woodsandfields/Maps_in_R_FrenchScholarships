@@ -19,15 +19,38 @@ The dataset is a csv file provided by the official French governmental platform 
 
 <https://www.data.gouv.fr/fr/datasets/boursiers-du-gouvernement-francais/#_>
 
+### Loading packages
+
+Checking first the packages we will use are already available else downloading them. Opening: R.utils, data.table, here, tidyr, dplyr, readr, ggplot2, sf, RColorBrewer.
+
+``` r
+packages <- c("R.utils", "data.table", "here", "ggplot2", "sf", "readr", "dplyr", "tidyr", "RColorBrewer")
+
+for (package in packages) {
+        if (!require(package, character.only=T, quietly=T)) {
+                install.packages(package)}
+        library(package, character.only=T)
+        }
+```
+
 ### Importing the data
 
-With a glimpse into a subset of the original dataset.
+Let's import the dataset in a subfolder of the current file directory.
 
 ``` r
 ### Source: https://www.data.gouv.fr/fr/datasets/boursiers-du-gouvernement-francais/#_ 
+here()
+WD <- getwd()
+if (!is.null(WD)) setwd(WD)
 dataUrl <- 'http://www.data.gouv.fr/fr/datasets/r/dd3b4807-d90c-46fe-b03a-2ad250db979f'
-download.file(dataUrl, "myData.csv")
-globalData <- read.table("myData.csv", sep=";")
+dir.create("originalData", showWarnings = F)
+download.file(dataUrl, "./originalData/myData.csv")
+```
+
+Now, let's have a look at a piece of the dataset we loaded down.
+
+``` r
+globalData <- read.table("originalData/myData.csv", sep=";")
 print(globalData[1:11,1:4])
 ```
 
@@ -43,20 +66,6 @@ print(globalData[1:11,1:4])
     ## 9                                   TOTAL ASIE OCEANIE 2 983 3 015 2 915
     ## 10                                        MOYEN-ORIENT 2 435 2 326 2 067
     ## 11                  Afrique Sub saharienne francophone 3 337 3 283 2 950
-
-### Loading packages.
-
-Checking first the packages we will use are already available else downloading them. Opening: R.utils, data.table, tidyr, dplyr, readr, ggplot2, sf, RColorBrewer.
-
-``` r
-packages <- c("R.utils", "data.table", "ggplot2", "sf", "readr", "dplyr", "tidyr", "RColorBrewer")
-
-for (package in packages) {
-        if (!require(package, character.only=T, quietly=T)) {
-                install.packages(package)}
-        library(package, character.only=T)
-        }
-```
 
 Tidying the data
 ----------------

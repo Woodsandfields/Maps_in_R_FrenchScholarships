@@ -24,27 +24,15 @@ The dataset is a csv file provided by the official French governmental platform 
 
 https://www.data.gouv.fr/fr/datasets/boursiers-du-gouvernement-francais/#_
 
-### Importing the data 
 
-With a glimpse into a subset of the original dataset.
+### Loading packages 
 
-```{r dataset}
-### Source: https://www.data.gouv.fr/fr/datasets/boursiers-du-gouvernement-francais/#_ 
-dataUrl <- 'http://www.data.gouv.fr/fr/datasets/r/dd3b4807-d90c-46fe-b03a-2ad250db979f'
-download.file(dataUrl, "myData.csv")
-globalData <- read.table("myData.csv", sep=";")
-print(globalData[1:11,1:4])
-```
-
-
-### Loading packages. 
-
-Checking first the packages we will use are already available else downloading them. Opening: R.utils, data.table, tidyr, dplyr, readr, ggplot2, sf, RColorBrewer. 
+Checking first the packages we will use are already available else downloading them. Opening: R.utils, data.table, here, tidyr, dplyr, readr, ggplot2, sf, RColorBrewer. 
 
 ```{r libraries, echo= TRUE, message = FALSE}
 
 
-packages <- c("R.utils", "data.table", "ggplot2", "sf", "readr", "dplyr", "tidyr", "RColorBrewer")
+packages <- c("R.utils", "data.table", "here", "ggplot2", "sf", "readr", "dplyr", "tidyr", "RColorBrewer")
 
 for (package in packages) {
         if (!require(package, character.only=T, quietly=T)) {
@@ -53,6 +41,29 @@ for (package in packages) {
         }
 
 ```
+
+### Importing the data 
+
+Let's import the dataset in a subfolder of the current file directory.
+
+```{r dataset, results = "hide"}
+
+### Source: https://www.data.gouv.fr/fr/datasets/boursiers-du-gouvernement-francais/#_ 
+here()
+WD <- getwd()
+if (!is.null(WD)) setwd(WD)
+dataUrl <- 'http://www.data.gouv.fr/fr/datasets/r/dd3b4807-d90c-46fe-b03a-2ad250db979f'
+dir.create("originalData", showWarnings = F)
+download.file(dataUrl, "./originalData/myData.csv")
+```
+
+Now, let's have a look at a piece of the dataset we loaded down.
+
+``` {r glimpse}
+globalData <- read.table("originalData/myData.csv", sep=";")
+print(globalData[1:11,1:4])
+```
+
 
 ## Tidying the data
 We subselect the rows and columns in order to have a dataset we can work on. To get useful numbers to do computations with, we must convert those in the dataset to numeric (and transit through the character format for that purpose, - while applying some regex through the "sub" function in order to remove blanks within large numbers).

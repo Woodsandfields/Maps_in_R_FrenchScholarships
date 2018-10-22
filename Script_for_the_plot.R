@@ -1,6 +1,6 @@
 
 
-packages <- c("R.utils", "data.table", "readr", "ggplot2", "dplyr")
+packages <- c("R.utils", "here", "data.table", "readr", "ggplot2", "dplyr")
 
 for (package in packages) {
         if (!require(package, character.only=T, quietly=T)) {
@@ -11,16 +11,27 @@ for (package in packages) {
 
 
 
+
+
 ## (ggplot) + annotate("text",label= "Lost 8 points because of bad luck!", x= "Arsenal", y=-3) +
 
 #### DATA DWNLD #### 
 
-# You might want to uncomment the next two lines in order to avoid downloading again and again.
+here()
+WD <- getwd()
+if (!is.null(WD)) setwd(WD)
+
+
+# You might want to uncomment the next three lines in order to avoid downloading again and again.
+
+
 
 dataUrl <- 'http://www.data.gouv.fr/fr/datasets/r/dd3b4807-d90c-46fe-b03a-2ad250db979f'
-download.file(dataUrl, "myData.csv")
 
-globalData <- read.table("myData.csv", sep=";")
+dir.create("originalData", showWarnings = F)
+download.file(dataUrl, "./originalData/myData.csv")
+
+globalData <- read.table("originalData/myData.csv", sep=";")
 
 
 #### DATA TIDYING ####
