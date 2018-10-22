@@ -8,7 +8,13 @@ library(dplyr)
 library(tidyr)
 library(RColorBrewer)
 
-region_location <- "C:/Users/Kroutz-/Dropbox/MOOCS/DATA/DATA_Knight/WORLD_SIMPL/TM_WORLD_BORDERS_SIMPL-0.3.shp"
+
+#In order to work of the file and save time not downloading the shapefile every time, 
+# and once you set your working directory to the current location, you might use 
+# (comment/uncomment the following line in opposite way to what to have 
+# for the preceding download/extract procedure:
+
+region_location <- "WORLD_SIMPL/TM_WORLD_BORDERS_SIMPL-0.3.shp"
 
 theRegions <- st_read(region_location)
 
@@ -113,8 +119,8 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
                    label=myRegions$schol, size=2.2)+
         xlab("") + ylab("")
 
-#print(myMap2)
+print(myMap2)
 # 
-ggsave('myMap2.png', myMap2, width = 16, height = 9, dpi = 100)
-ggsave('myMap1.png', myMap, width = 16, height = 9, dpi = 100)
+# ggsave('myMap2.png', myMap2, width = 16, height = 9, dpi = 100)
+# ggsave('myMap1.png', myMap, width = 16, height = 9, dpi = 100)
 # 
