@@ -126,13 +126,17 @@ Preparing the shapefile.
 MapSource <http://thematicmapping.org/downloads/TM_WORLD_BORDERS_SIMPL-0.3.zip> Shapefile is extracted from zip and used for the next steps.
 
 ``` r
-region_location <- "C:/Users/Kroutz-/Dropbox/MOOCS/DATA/DATA_Knight/WORLD_SIMPL/TM_WORLD_BORDERS_SIMPL-0.3.shp"
+#In order to work of the file and save time not downloading the shapefile every time, 
+# and once you set your working directory to the current location, you might use 
+# (comment/uncomment the following line in opposite way to what to have 
+# for the preceding download/extract procedure:
 
+region_location <- "WORLD_SIMPL/TM_WORLD_BORDERS_SIMPL-0.3.shp"
 
 theRegions <- st_read(region_location)
 ```
 
-    ## Reading layer `TM_WORLD_BORDERS_SIMPL-0.3' from data source `C:\Users\Kroutz-\Dropbox\MOOCS\DATA\DATA_Knight\WORLD_SIMPL\TM_WORLD_BORDERS_SIMPL-0.3.shp' using driver `ESRI Shapefile'
+    ## Reading layer `TM_WORLD_BORDERS_SIMPL-0.3' from data source `C:\Users\Kroutz-\Dropbox\MOOCS\DATA\DATA_Knight\R_FrenchScholarships\WORLD_SIMPL\TM_WORLD_BORDERS_SIMPL-0.3.shp' using driver `ESRI Shapefile'
     ## Simple feature collection with 246 features and 11 fields
     ## geometry type:  MULTIPOLYGON
     ## dimension:      XY
@@ -199,7 +203,7 @@ names(myColors) <- levels(as.factor(myRegions$Regions))
 myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
         scale_fill_distiller(direction = 1, 
                              name =" Number of Scholarships", palette="Oranges")+
-        labs(caption="Number of Scholarships Given by World Region in 2016", 
+        labs(caption="Number of Scholarships Given by World Region in 2011", 
              subtitle="Scholarships to Foreign Students by the French Government")+
         geom_label(aes(x=LON, y=LAT), 
                    color="black", 
@@ -217,7 +221,7 @@ This choropleth map doesn't inform clearly enough. So let's try something else.
 ``` r
 myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         scale_fill_brewer(palette="Set1")+
-        labs(caption="Number of Scholarships Given by World Region in 2016", 
+        labs(caption="Number of Scholarships Given by World Region in 2011", 
              title="World Repartition of French Government Scholarships")+
         geom_label(aes(x=LON, y=LAT), 
                    color="black", fill = "seashell", 
