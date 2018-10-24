@@ -84,52 +84,70 @@ Then, let's get a more conventional presentation with rows, not columns, indicat
 
 ``` r
 Years <- as.factor(as.character(c(2006:2011)))
-finalTidy <- as.data.frame(t(tidyData)) %>% 
+Regions <- c("Years", "UE", "Eur_hors_UE", "Europe", "Am_N", "America", "Asia/Oceania", "Middle East", "AfSubS_F", "AfSubS_nF","Sub-Saharan Africa","Maghreb", "Total_Ge")
+
+tidySet <- as.data.frame(t(tidyData)) %>% 
         cbind(Years, .)
-Regions <- c("Years", "EU", "EurNotEU", "Total_Eur", "Am_N", "Total_Am", "Total_Asia_O", "Middle_E", "AfSubS_F", "AfSubS_nF","Total_AfSubS", "Maghreb", "Total_Ge")
-colnames(finalTidy) <- Regions
-rownames(finalTidy) <- Years
-print(finalTidy)
+
+colnames(tidySet) <- Regions
+rownames(tidySet) <- Years
+
+
+tidySet <- tidySet %>% 
+        gather(Years, count) 
+
+colnames(tidySet) <- c("Years", "Region", "Total")
+
+tidySet <- tidySet %>%
+        filter(Region %in% c("Europe", "America", 
+                             "Asia/Oceania", "Middle East",
+                             "Sub-Saharan Africa", "Maghreb"))
+
+print(tidySet)
 ```
 
-    ##      Years   EU EurNotEU Total_Eur Am_N Total_Am Total_Asia_O Middle_E
-    ## 2006  2006 1795     1780      3575  171     1665         2983     2435
-    ## 2007  2007 1732     1870      3602  146     1660         3015     2326
-    ## 2008  2008 1556     1703      3259  154     1636         2915     2067
-    ## 2009  2009 1438     1548      2986  134     1427         2812     1962
-    ## 2010  2010 1345     1646      2991  122     1655         2777     1761
-    ## 2011  2011 1271     1484      2755   97     1770         2662     1697
-    ##      AfSubS_F AfSubS_nF Total_AfSubS Maghreb Total_Ge
-    ## 2006     3337       613         3950    4021    18629
-    ## 2007     3283       560         3843    3947    18393
-    ## 2008     2950       505         3455    3580    16912
-    ## 2009     2590       420         3010    3393    15590
-    ## 2010     2466       459         2925    3271    15380
-    ## 2011     2503       403         2906    2897    14687
+    ##    Years             Region Total
+    ## 1   2006             Europe  3575
+    ## 2   2007             Europe  3602
+    ## 3   2008             Europe  3259
+    ## 4   2009             Europe  2986
+    ## 5   2010             Europe  2991
+    ## 6   2011             Europe  2755
+    ## 7   2006            America  1665
+    ## 8   2007            America  1660
+    ## 9   2008            America  1636
+    ## 10  2009            America  1427
+    ## 11  2010            America  1655
+    ## 12  2011            America  1770
+    ## 13  2006       Asia/Oceania  2983
+    ## 14  2007       Asia/Oceania  3015
+    ## 15  2008       Asia/Oceania  2915
+    ## 16  2009       Asia/Oceania  2812
+    ## 17  2010       Asia/Oceania  2777
+    ## 18  2011       Asia/Oceania  2662
+    ## 19  2006        Middle East  2435
+    ## 20  2007        Middle East  2326
+    ## 21  2008        Middle East  2067
+    ## 22  2009        Middle East  1962
+    ## 23  2010        Middle East  1761
+    ## 24  2011        Middle East  1697
+    ## 25  2006 Sub-Saharan Africa  3950
+    ## 26  2007 Sub-Saharan Africa  3843
+    ## 27  2008 Sub-Saharan Africa  3455
+    ## 28  2009 Sub-Saharan Africa  3010
+    ## 29  2010 Sub-Saharan Africa  2925
+    ## 30  2011 Sub-Saharan Africa  2906
+    ## 31  2006            Maghreb  4021
+    ## 32  2007            Maghreb  3947
+    ## 33  2008            Maghreb  3580
+    ## 34  2009            Maghreb  3393
+    ## 35  2010            Maghreb  3271
+    ## 36  2011            Maghreb  2897
 
 ### Data vizualization
 
 ``` r
-data_Eur <- cbind(finalTidy[,c(1,4)], Region=rep("Europe", 6))
-data_Am <- cbind(finalTidy[,c(1,6)], Region=rep("America", 6))
-data_Asia <- cbind(finalTidy[,c(1,7)], Region=rep("Asia/OCeania", 6))
-data_ME <- cbind(finalTidy[,c(1,8)], Region=rep("Middle East", 6))
-data_Afr <- cbind(finalTidy[,c(1,11)], Region=rep("Sub-Saharan Africa", 6))
-data_Magh <- cbind(finalTidy[,c(1,12)], Region=rep("Maghreb", 6))
-
-
-names(data_Eur)<- c("Years", "Total", "Region")
-names(data_Am)<- c("Years", "Total", "Region")
-names(data_Asia)<- c("Years", "Total", "Region")
-names(data_ME)<- c("Years", "Total", "Region")
-names(data_Afr)<- c("Years", "Total", "Region")
-names(data_Magh)<- c("Years", "Total", "Region")
-
-long_Data <- rbind(data_Afr, data_Am, data_Asia, data_Eur, data_Magh, data_ME)
-
-#### DATA VIZ ####
-
-ScholPlot <- ggplot(data=long_Data) + geom_point(aes(x=Years, y=Total, color = Region, size= 10)) +
+ScholPlot <- ggplot(data=tidySet) + geom_point(aes(x=Years, y=Total, color = Region, size= 10)) +
         geom_line(aes(x=Years, y=Total, group = Region)) + guides(size=FALSE)
 print(ScholPlot)
 ```

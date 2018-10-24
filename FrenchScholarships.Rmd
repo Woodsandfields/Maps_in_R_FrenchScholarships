@@ -81,38 +81,34 @@ Then, let's get a more conventional presentation with rows, not columns, indicat
 ```{r final_tidying, echo=TRUE}
 
 Years <- as.factor(as.character(c(2006:2011)))
-finalTidy <- as.data.frame(t(tidyData)) %>% 
+Regions <- c("Years", "UE", "Eur_hors_UE", "Europe", "Am_N", "America", "Asia/Oceania", "Middle East", "AfSubS_F", "AfSubS_nF","Sub-Saharan Africa","Maghreb", "Total_Ge")
+
+tidySet <- as.data.frame(t(tidyData)) %>% 
         cbind(Years, .)
-Regions <- c("Years", "EU", "EurNotEU", "Total_Eur", "Am_N", "Total_Am", "Total_Asia_O", "Middle_E", "AfSubS_F", "AfSubS_nF","Total_AfSubS", "Maghreb", "Total_Ge")
-colnames(finalTidy) <- Regions
-rownames(finalTidy) <- Years
-print(finalTidy)
+
+colnames(tidySet) <- Regions
+rownames(tidySet) <- Years
+
+
+tidySet <- tidySet %>% 
+        gather(Years, count) 
+
+colnames(tidySet) <- c("Years", "Region", "Total")
+
+tidySet <- tidySet %>%
+        filter(Region %in% c("Europe", "America", 
+                             "Asia/Oceania", "Middle East",
+                             "Sub-Saharan Africa", "Maghreb"))
+
+print(tidySet)
 ```
 
 ### Data vizualization
 
 ```{r vizualization, echo= TRUE}
 
-data_Eur <- cbind(finalTidy[,c(1,4)], Region=rep("Europe", 6))
-data_Am <- cbind(finalTidy[,c(1,6)], Region=rep("America", 6))
-data_Asia <- cbind(finalTidy[,c(1,7)], Region=rep("Asia/OCeania", 6))
-data_ME <- cbind(finalTidy[,c(1,8)], Region=rep("Middle East", 6))
-data_Afr <- cbind(finalTidy[,c(1,11)], Region=rep("Sub-Saharan Africa", 6))
-data_Magh <- cbind(finalTidy[,c(1,12)], Region=rep("Maghreb", 6))
 
-
-names(data_Eur)<- c("Years", "Total", "Region")
-names(data_Am)<- c("Years", "Total", "Region")
-names(data_Asia)<- c("Years", "Total", "Region")
-names(data_ME)<- c("Years", "Total", "Region")
-names(data_Afr)<- c("Years", "Total", "Region")
-names(data_Magh)<- c("Years", "Total", "Region")
-
-long_Data <- rbind(data_Afr, data_Am, data_Asia, data_Eur, data_Magh, data_ME)
-
-#### DATA VIZ ####
-
-ScholPlot <- ggplot(data=long_Data) + geom_point(aes(x=Years, y=Total, color = Region, size= 10)) +
+ScholPlot <- ggplot(data=tidySet) + geom_point(aes(x=Years, y=Total, color = Region, size= 10)) +
         geom_line(aes(x=Years, y=Total, group = Region)) + guides(size=FALSE)
 print(ScholPlot)
 
