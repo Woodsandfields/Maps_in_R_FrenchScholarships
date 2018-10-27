@@ -126,9 +126,9 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
              title="World Repartition of French Government Scholarships", size=5)+
         geom_label(aes(x=LON, y=LAT), 
                    color="black", fill = "grey", 
-                   label=myRegions$schol, size=5.2)+
+                   label=myRegions$schol, size=15)+
         xlab("") + ylab("")+
-        theme(legend.text=element_text(size=15))
+        theme(legend.text=element_text(size=45))
 
 print(myMap2)
 # 
