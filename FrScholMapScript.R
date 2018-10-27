@@ -105,33 +105,38 @@ names(myColors) <- levels(as.factor(myRegions$Regions))
 #colScale <- scale_color_manual(name = "SUBREGION",values = myColors)
 
 myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
-        scale_fill_distiller(name =" Number of Scholarships", palette="Oranges")+
+        scale_fill_distiller( direction = 1,
+                name =" Number of \nScholarships\ngiven in 2011", palette="Oranges") +
         labs(caption="Number of Scholarships Given by World Region in 2011", 
-             title="Scholarships to Foreign Students by the French Government")+
+             title="Scholarships to Foreign Students by the French Government") +
         geom_label(aes(x=LON, y=LAT), 
                    color="black", fill = "cornsilk", 
                    label=myRegions$Regions, size=15)+
         xlab("") + ylab("") +
-        guides(color = FALSE, fill=guide_legend("Number of \nScholarships \ngiven in 2011"))+
+        guides(color = FALSE) +
         theme(plot.title = element_text(size = 52, color = "gray32", face = "bold"),
               plot.caption = element_text(size = 40, color = "gray32"),
               legend.text=element_text(size=35, color = "gray32"),
               legend.title = element_text(size=35, color = "gray32"),
-              legend.direction = 'vertical', 
               legend.position = 'left',
-              legend.key = element_rect(size = 5),
-              legend.key.size = unit(5.5, 'lines'),
+              legend.direction = "vertical",
+              legend.key = element_rect(size = 7),
+              legend.key.size = unit(10, 'lines'),
               legend.key.height = unit(7, "cm"),
               axis.ticks.x = element_blank(),
-              axis.ticks.y = element_blank())
+              axis.text.x = element_blank(),
+              axis.ticks.y = element_blank(),
+              axis.text.y = element_blank())
 
  
+
+
 print(myMap)
 
 # Here is another, more satisfying map.
 
 myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
-        scale_fill_brewer(palette="Set1")+
+        scale_fill_brewer(palette="Set1", direction = -1)+
         labs(caption="Number of Scholarships Given by World Region in 2011", 
              title="World Repartition of French Government Scholarships", size=5)+
         geom_label(aes(x=LON, y=LAT), 
@@ -147,10 +152,12 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
               legend.key = element_rect(size = 5),
               legend.key.size = unit(5, 'lines'),
               axis.ticks.x = element_blank(),
-              axis.ticks.y = element_blank())
+              axis.ticks.y = element_blank(),
+              axis.text.x = element_blank(),
+              axis.text.y = element_blank())
 
-print(myMap2)
+# print(myMap2)
 # 
 ggsave('myMap__choropleth.png', myMap, width = 48, height = 27, dpi = 400)
-ggsave('myMap__classic.png', myMap2, width = 48, height = 27, dpi = 400)
+# ggsave('myMap__classic.png', myMap2, width = 48, height = 27, dpi = 400)
 # 
