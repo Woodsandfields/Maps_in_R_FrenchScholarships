@@ -123,11 +123,12 @@ print(myMap)
 myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         scale_fill_brewer(palette="Set1")+
         labs(caption="Number of Scholarships Given by World Region in 2011", 
-             title="World Repartition of French Government Scholarships")+
+             title="World Repartition of French Government Scholarships", size=5)+
         geom_label(aes(x=LON, y=LAT), 
                    color="black", fill = "grey", 
-                   label=myRegions$schol, size=2.2)+
-        xlab("") + ylab("")
+                   label=myRegions$schol, size=5.2)+
+        xlab("") + ylab("")+
+        theme(legend.text=element_text(size=15))
 
 print(myMap2)
 # 
