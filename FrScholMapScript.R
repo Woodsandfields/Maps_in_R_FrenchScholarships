@@ -131,6 +131,6 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
 
 print(myMap2)
 # 
-ggsave('myMap2.png', myMap2, width = 16, height = 9, dpi = 100)
-ggsave('myMap1.png', myMap, width = 16, height = 9, dpi = 100)
+ggsave('myMap2.png', myMap2, width = 32, height = 18, dpi = 100)
+ggsave('myMap1.png', myMap, width = 32, height = 18, dpi = 100)
 # 
