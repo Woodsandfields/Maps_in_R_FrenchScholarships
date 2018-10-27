@@ -100,7 +100,14 @@ tidySet <- tidySet %>%
                              "Asia/Oceania", "Middle East",
                              "Sub-Saharan Africa", "Maghreb"))
 
-print(tidySet)
+```
+The new dataset ready for creating a plot is now ready. Here are the ten first lines: 
+
+
+```{r tidyset} 
+
+print(tidySet[1:10,])
+
 ```
 
 ### Data vizualization
@@ -109,11 +116,37 @@ print(tidySet)
 
 
 ScholPlot <- ggplot(data=tidySet) + geom_point(aes(x=Years, y=Total, color = Region, size= 10)) +
-        geom_line(aes(x=Years, y=Total, group = Region)) + guides(size=FALSE)
+        geom_line(aes(x=Years, y=Total, group = Region)) + guides(size=FALSE)+
+        ylab("Number of Scholarships")
+
+
 print(ScholPlot)
 
-ggsave('ScholPlot.png', width = 16, height = 9, dpi = 100)
 ```
+
+
+Let's have a larger plot with labels instead of a legend to make it broader. First, we retrieve the colors from the previous plot.
+
+```{r map_colors, echo = TRUE}
+# Retrieving colors through the console
+g <- ggplot_build(ScholPlot)
+h <-unique(g$data[[1]]["colour"])
+print(h)
+
+#Matching colors with their regions
+
+ScholPlot2 <- ScholPlot + annotate("text", label="Europe", color = "#00BA38", x=2, y = 3450)+
+        annotate("text", label="America", color = "#F8766D", x=2, y = 1550)+
+        annotate("text", label="Asia/OCeania", color = "#B79F00", x=2, y = 2850)+
+        annotate("text", label="Middle East", color = "#619CFF", x=2, y = 2180)+
+        annotate("text", label="Maghreb", color = "#F564E3", 1.5, y = 3820)+
+        annotate("text", label="Sub-Saharan Africa", color = "#00BFC4", x=4, y = 3600)+
+        theme(legend.position = "none")
+        
+
+print(ScholPlot2)
+```
+
 
 
 ## Creating a map

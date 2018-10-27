@@ -102,61 +102,72 @@ tidySet <- tidySet %>%
         filter(Region %in% c("Europe", "America", 
                              "Asia/Oceania", "Middle East",
                              "Sub-Saharan Africa", "Maghreb"))
-
-print(tidySet)
 ```
 
-    ##    Years             Region Total
-    ## 1   2006             Europe  3575
-    ## 2   2007             Europe  3602
-    ## 3   2008             Europe  3259
-    ## 4   2009             Europe  2986
-    ## 5   2010             Europe  2991
-    ## 6   2011             Europe  2755
-    ## 7   2006            America  1665
-    ## 8   2007            America  1660
-    ## 9   2008            America  1636
-    ## 10  2009            America  1427
-    ## 11  2010            America  1655
-    ## 12  2011            America  1770
-    ## 13  2006       Asia/Oceania  2983
-    ## 14  2007       Asia/Oceania  3015
-    ## 15  2008       Asia/Oceania  2915
-    ## 16  2009       Asia/Oceania  2812
-    ## 17  2010       Asia/Oceania  2777
-    ## 18  2011       Asia/Oceania  2662
-    ## 19  2006        Middle East  2435
-    ## 20  2007        Middle East  2326
-    ## 21  2008        Middle East  2067
-    ## 22  2009        Middle East  1962
-    ## 23  2010        Middle East  1761
-    ## 24  2011        Middle East  1697
-    ## 25  2006 Sub-Saharan Africa  3950
-    ## 26  2007 Sub-Saharan Africa  3843
-    ## 27  2008 Sub-Saharan Africa  3455
-    ## 28  2009 Sub-Saharan Africa  3010
-    ## 29  2010 Sub-Saharan Africa  2925
-    ## 30  2011 Sub-Saharan Africa  2906
-    ## 31  2006            Maghreb  4021
-    ## 32  2007            Maghreb  3947
-    ## 33  2008            Maghreb  3580
-    ## 34  2009            Maghreb  3393
-    ## 35  2010            Maghreb  3271
-    ## 36  2011            Maghreb  2897
+The new dataset ready for creating a plot is now ready. Here are the ten first lines:
+
+``` r
+print(tidySet[1:10,])
+```
+
+    ##    Years  Region Total
+    ## 1   2006  Europe  3575
+    ## 2   2007  Europe  3602
+    ## 3   2008  Europe  3259
+    ## 4   2009  Europe  2986
+    ## 5   2010  Europe  2991
+    ## 6   2011  Europe  2755
+    ## 7   2006 America  1665
+    ## 8   2007 America  1660
+    ## 9   2008 America  1636
+    ## 10  2009 America  1427
 
 ### Data vizualization
 
 ``` r
 ScholPlot <- ggplot(data=tidySet) + geom_point(aes(x=Years, y=Total, color = Region, size= 10)) +
-        geom_line(aes(x=Years, y=Total, group = Region)) + guides(size=FALSE)
+        geom_line(aes(x=Years, y=Total, group = Region)) + guides(size=FALSE)+
+        ylab("Number of Scholarships")
+
+
 print(ScholPlot)
 ```
 
 ![](FrenchScholarships_files/figure-markdown_github-ascii_identifiers/vizualization-1.png)
 
+Let's have a larger plot with labels instead of a legend to make it broader. First, we retrieve the colors from the previous plot.
+
 ``` r
-ggsave('ScholPlot.png', width = 16, height = 9, dpi = 100)
+# Retrieving colors through the console
+g <- ggplot_build(ScholPlot)
+h <-unique(g$data[[1]]["colour"])
+print(h)
 ```
+
+    ##     colour
+    ## 1  #00BA38
+    ## 7  #F8766D
+    ## 13 #B79F00
+    ## 19 #619CFF
+    ## 25 #F564E3
+    ## 31 #00BFC4
+
+``` r
+#Matching colors with their regions
+
+ScholPlot2 <- ScholPlot + annotate("text", label="Europe", color = "#00BA38", x=2, y = 3450)+
+        annotate("text", label="America", color = "#F8766D", x=2, y = 1550)+
+        annotate("text", label="Asia/OCeania", color = "#B79F00", x=2, y = 2850)+
+        annotate("text", label="Middle East", color = "#619CFF", x=2, y = 2180)+
+        annotate("text", label="Maghreb", color = "#F564E3", 1.5, y = 3820)+
+        annotate("text", label="Sub-Saharan Africa", color = "#00BFC4", x=4, y = 3600)+
+        theme(legend.position = "none")
+        
+
+print(ScholPlot2)
+```
+
+![](FrenchScholarships_files/figure-markdown_github-ascii_identifiers/map_colors-1.png)
 
 Creating a map
 --------------
