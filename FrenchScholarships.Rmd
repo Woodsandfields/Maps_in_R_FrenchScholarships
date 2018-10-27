@@ -273,7 +273,19 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         geom_label(aes(x=LON, y=LAT), 
                    color="black", fill = "seashell", 
                    label=myRegions$schol, size=1.8)+
-        xlab("") + ylab("")
+        xlab("") + ylab("")+
+        theme(plot.title = element_text(size = 22, color="black", face = "bold"),
+              plot.caption = element_text(size = 15),
+              legend.text=element_text(size=15), 
+              legend.direction = 'horizontal', 
+              legend.position = 'bottom',
+              legend.title=element_blank(),
+              legend.key = element_rect(size = 3),
+              legend.key.size = unit(5, 'lines'),
+              axis.ticks.x = element_blank(),
+              axis.ticks.y = element_blank(),
+              axis.text.x = element_blank(),
+              axis.text.y = element_blank())
 
 print(myMap2)
 

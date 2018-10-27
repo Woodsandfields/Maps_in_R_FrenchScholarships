@@ -2,7 +2,9 @@
 #*************************************************************
 # **** *******************************************************
 
-
+### WARNING ###
+#This code sets map parameters to produce large png files as output. 
+# The maps created from within RStudio or equivalent software won't give adapted visual results.
 
 # LOADING PACKAGES. Checking first they are already available else downloading them.
 
@@ -85,14 +87,7 @@ myRegions <- myRegions %>%
 
 
 
-
 ### MAKING THE MAP
-
-# myColors <- brewer.pal(12,"Set3") 
-# names(myColors) <- levels(as.factor(myRegions$Regions))
-# #colScale <- scale_color_manual(name = "SUBREGION",values = myColors)
-
-
 
 # Here is the choropeth map as expected in the final document to produce for the Knight Foundation.
 # However, it doesn't look good and add less than the format we will try as a next step.
@@ -100,9 +95,6 @@ myRegions <- myRegions %>%
 
 myRegions$schol <- as.numeric(myRegions$schol)
 
-myColors <- brewer.pal(12,"Set3") 
-names(myColors) <- levels(as.factor(myRegions$Regions))
-#colScale <- scale_color_manual(name = "SUBREGION",values = myColors)
 
 myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
         scale_fill_distiller( direction = 1,
@@ -156,8 +148,8 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
               axis.text.x = element_blank(),
               axis.text.y = element_blank())
 
-# print(myMap2)
-# 
+print(myMap2)
+
 ggsave('myMap__choropleth.png', myMap, width = 48, height = 27, dpi = 400)
-# ggsave('myMap__classic.png', myMap2, width = 48, height = 27, dpi = 400)
-# 
+ggsave('myMap__classic.png', myMap2, width = 48, height = 27, dpi = 400)
+
