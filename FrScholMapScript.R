@@ -108,12 +108,21 @@ myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
         scale_fill_distiller(direction = 1, 
                              name =" Number of Scholarships", palette="Oranges")+
         labs(caption="Number of Scholarships Given by World Region in 2011", 
-             subtitle="Scholarships to Foreign Students by the French Government")+
+             title="Scholarships to Foreign Students by the French Government")+
         geom_label(aes(x=LON, y=LAT), 
-                   color="black", fill = "grey", 
-                   label=myRegions$Regions, size=2)+
+                   color="gray18", fill = "cornsilk", 
+                   label=myRegions$Regions, size=15)+
         xlab("") + ylab("") +
-        guides(color = FALSE)
+        guides(color = FALSE, fill=guide_legend("Number of \nScholarships \ngiven in 2011"))+
+        theme(plot.title = element_text(size = 52, color = "gray20", face = "bold"),
+              plot.caption = element_text(size = 40, color = "grey30"),
+              legend.text=element_text(size=35, color = "gray20"),
+              legend.title = element_text(size=35, color = "gray20"),
+              legend.direction = 'vertical', 
+              legend.position = 'left',
+              legend.key = element_rect(size = 5),
+              legend.key.size = unit(5.5, 'lines'),
+              legend.key.height = unit(7, "cm"))
 
  
 print(myMap)
@@ -125,13 +134,24 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         labs(caption="Number of Scholarships Given by World Region in 2011", 
              title="World Repartition of French Government Scholarships", size=5)+
         geom_label(aes(x=LON, y=LAT), 
-                   color="black", fill = "grey", 
+                   color="gray23", fill = "gray99", 
                    label=myRegions$schol, size=15)+
         xlab("") + ylab("")+
-        theme(legend.text=element_text(size=45))
+        theme(plot.title = element_text(size = 52, color="gray13", face = "bold"),
+              plot.caption = element_text(size = 40, face = "italic", color="gray13"),
+              legend.text=element_text(size=35, color="gray13"), 
+              legend.direction = 'horizontal', 
+              legend.position = 'bottom',
+              legend.title=element_text(size=30, color="gray13"),
+              legend.key = element_rect(size = 5),
+              legend.key.size = unit(5, 'lines'))
+
+# theme(plot.title = element_text(size = 12, face = "bold"),
+#       legend.title=element_text(size=10), 
+#       legend.text=element_text(size=9))
 
 print(myMap2)
 # 
-ggsave('myMap2.png', myMap2, width = 32, height = 18, dpi = 100)
-ggsave('myMap1.png', myMap, width = 32, height = 18, dpi = 100)
+ggsave('myMap__choropleth.png', myMap, width = 48, height = 27, dpi = 400)
+ggsave('myMap__classic.png', myMap2, width = 48, height = 27, dpi = 400)
 # 
