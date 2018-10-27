@@ -80,8 +80,8 @@ myRegions_notRegrouped <- myRegions
 myRegions <- myRegions %>%
         group_by(Regions) %>%
         mutate(LON = mean(LON), LAT = mean(LAT),
-               LON = case_when(Regions == "AsiaOceania" ~ LON+40, TRUE  ~ LON),
-               LAT = case_when(Regions == "Antarctica" ~ LAT-50, Regions == "AsiaOceania" ~ LAT+22, TRUE ~ LAT))
+               LON = case_when(Regions == "AsiaOceania" ~ LON+50, TRUE  ~ LON),
+               LAT = case_when(Regions == "Antarctica" ~ LAT-50, TRUE ~ LAT))
 
 
 
@@ -105,25 +105,24 @@ names(myColors) <- levels(as.factor(myRegions$Regions))
 #colScale <- scale_color_manual(name = "SUBREGION",values = myColors)
 
 myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
-        scale_fill_distiller(name =" Number of Scholarships", palette="Oranges")+
+        scale_fill_distiller(direction = 1, 
+                             name =" Number of Scholarships", palette="Oranges")+
         labs(caption="Number of Scholarships Given by World Region in 2011", 
              title="Scholarships to Foreign Students by the French Government")+
         geom_label(aes(x=LON, y=LAT), 
-                   color="black", fill = "cornsilk", 
+                   color="gray18", fill = "cornsilk", 
                    label=myRegions$Regions, size=15)+
         xlab("") + ylab("") +
         guides(color = FALSE, fill=guide_legend("Number of \nScholarships \ngiven in 2011"))+
-        theme(plot.title = element_text(size = 52, color = "gray32", face = "bold"),
-              plot.caption = element_text(size = 40, color = "gray32"),
-              legend.text=element_text(size=35, color = "gray32"),
-              legend.title = element_text(size=35, color = "gray32"),
+        theme(plot.title = element_text(size = 52, color = "gray20", face = "bold"),
+              plot.caption = element_text(size = 40, color = "grey30"),
+              legend.text=element_text(size=35, color = "gray20"),
+              legend.title = element_text(size=35, color = "gray20"),
               legend.direction = 'vertical', 
               legend.position = 'left',
               legend.key = element_rect(size = 5),
               legend.key.size = unit(5.5, 'lines'),
-              legend.key.height = unit(7, "cm"),
-              axis.ticks.x = element_blank(),
-              axis.ticks.y = element_blank())
+              legend.key.height = unit(7, "cm"))
 
  
 print(myMap)
@@ -135,19 +134,21 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         labs(caption="Number of Scholarships Given by World Region in 2011", 
              title="World Repartition of French Government Scholarships", size=5)+
         geom_label(aes(x=LON, y=LAT), 
-                   color="black", fill = "gray98", 
+                   color="gray23", fill = "gray99", 
                    label=myRegions$schol, size=15)+
         xlab("") + ylab("")+
-        theme(plot.title = element_text(size = 52, color="black", face = "bold"),
-              plot.caption = element_text(size = 40),
-              legend.text=element_text(size=35), 
+        theme(plot.title = element_text(size = 52, color="gray13", face = "bold"),
+              plot.caption = element_text(size = 40, face = "italic", color="gray13"),
+              legend.text=element_text(size=35, color="gray13"), 
               legend.direction = 'horizontal', 
               legend.position = 'bottom',
-              legend.title=element_blank(),
+              legend.title=element_text(size=30, color="gray13"),
               legend.key = element_rect(size = 5),
-              legend.key.size = unit(5, 'lines'),
-              axis.ticks.x = element_blank(),
-              axis.ticks.y = element_blank())
+              legend.key.size = unit(5, 'lines'))
+
+# theme(plot.title = element_text(size = 12, face = "bold"),
+#       legend.title=element_text(size=10), 
+#       legend.text=element_text(size=9))
 
 print(myMap2)
 # 
