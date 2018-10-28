@@ -207,13 +207,13 @@ myRegions <- myRegions %>%
                (SUBREGION == 0 ~ "Antarctica_NA", 
                 SUBREGION %in% c(39,151, 154, 155) ~ "Europe_2755",
                 (SUBREGION  == 15 & NAME != "Egypt" & NAME !="Sudan") ~ "Maghreb_2997",
-                SUBREGION %in% c(30, 34, 35, 53, 54, 57, 61, 143) ~ "AsiaOceania_2662",
+                SUBREGION %in% c(30, 34, 35, 53, 54, 57, 61, 143) ~ "Asia & Oceania_2662",
                 SUBREGION %in% c(5, 13, 21, 29) ~ "America_1770",
                 (SUBREGION == 145 | NAME=="Iran (Islamic Republic of)"
-                 | NAME == "Egypt")  ~ "MiddleEast_1697", 
-                SUBREGION %in% c(11, 14, 17, 18) | NAME == "Sudan" ~ "SubSaharanAfrica_2906"
+                 | NAME == "Egypt")  ~ "Middle East_1697", 
+                SUBREGION %in% c(11, 14, 17, 18) | NAME == "Sudan" ~ "Sub Saharan Africa_2906"
                  )) %>%
-                separate(Regions_schol, c("Regions", "schol")) 
+                separate(Regions_schol, c("Regions", "schol"), sep="_") 
                                          
 
 
@@ -233,7 +233,7 @@ myRegions_notRegrouped <- myRegions
 myRegions <- myRegions %>%
         group_by(Regions) %>%
         mutate(LON = mean(LON), LAT = mean(LAT),
-               LON = case_when(Regions == "AsiaOceania" ~ LON+50, TRUE  ~ LON),
+               LON = case_when(Regions == "Asia & Oceania" ~ LON+50, TRUE  ~ LON),
                LAT = case_when(Regions == "Antarctica" ~ LAT-50, TRUE ~ LAT))
 
 ```
@@ -249,14 +249,24 @@ names(myColors) <- levels(as.factor(myRegions$Regions))
 
 myMap <- ggplot(myRegions) + geom_sf(aes(fill=schol,color = Regions))+
         scale_fill_distiller(direction = 1, 
-                             name =" Number of Scholarships", palette="Oranges")+
+                             name =" Number of\nScholarships", palette="Oranges")+
         labs(caption="Number of Scholarships Given by World Region in 2011", 
              subtitle="Scholarships to Foreign Students by the French Government")+
         geom_label(aes(x=LON, y=LAT), 
                    color="black", 
-                   label=toupper(myRegions$Regions), size=1.7)+
+                   label=toupper(myRegions$Regions), size=2, alpha=.05)+
         xlab("") + ylab("") +
-        guides(color = FALSE)
+        guides(color = FALSE) +
+        theme(plot.title = element_text(color = "gray32", face = "bold"),
+              plot.caption = element_text(color = "gray32"),
+              legend.text=element_text(color = "gray32"),
+              legend.title = element_text(color = "gray32"),
+              legend.position = 'left',
+              legend.direction = "vertical",
+              axis.ticks.x = element_blank(),
+              axis.text.x = element_blank(),
+              axis.ticks.y = element_blank(),
+              axis.text.y = element_blank())
 
 print(myMap)
 ````
@@ -271,17 +281,15 @@ myMap2 <- ggplot(myRegions) + geom_sf(aes(fill=Regions,color = Regions))+
         labs(caption="Number of Scholarships Given by World Region in 2011", 
              title="World Repartition of French Government Scholarships")+
         geom_label(aes(x=LON, y=LAT), 
-                   color="black", fill = "seashell", 
-                   label=myRegions$schol, size=1.8)+
+                   color="black", fill = "seashell", alpha=.05,
+                   label=myRegions$schol, size=2)+
         xlab("") + ylab("")+
-        theme(plot.title = element_text(size = 22, color="black", face = "bold"),
-              plot.caption = element_text(size = 15),
-              legend.text=element_text(size=15), 
+        theme(plot.title = element_text(color="black", face = "bold"),
               legend.direction = 'horizontal', 
               legend.position = 'bottom',
+              legend.text.align = 0,
+              legend.text = element_text(size = 7.5),
               legend.title=element_blank(),
-              legend.key = element_rect(size = 3),
-              legend.key.size = unit(5, 'lines'),
               axis.ticks.x = element_blank(),
               axis.ticks.y = element_blank(),
               axis.text.x = element_blank(),
